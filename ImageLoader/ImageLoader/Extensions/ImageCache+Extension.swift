@@ -10,10 +10,6 @@ import Foundation
 import UIKit
 
 extension ImageCache: ImageCacheType {
-    func removeAllImages() {
-        
-    }
-
     func insertImage(_ image: UIImage?, for url: URL) {
         guard let image = image else { return removeImage(for: url) }
         let decodedImage = image.decodedImage()
@@ -27,6 +23,14 @@ extension ImageCache: ImageCacheType {
         lock.lock(); defer { lock.unlock() }
         imageCache.removeObject(forKey: url as AnyObject)
         decodedImageCache.removeObject(forKey: url as AnyObject)
+    }
+}
+
+extension ImageCache {
+    func removeAllImages() {
+        lock.lock(); defer { lock.unlock() }
+        imageCache.removeAllObjects()
+        decodedImageCache.removeAllObjects()
     }
 }
 

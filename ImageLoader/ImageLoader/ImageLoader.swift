@@ -12,10 +12,14 @@ import Foundation
 
 public class ImageLoader {
     private static let cache = ImageCache()
+    private static let backgroundQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 5
+        return queue
+    }()
     
     public static func loadImage(from url: URL) -> AnyPublisher<UIImage?, Never> {
-        let backgroundQueue = DispatchQueue(label: UUID().uuidString,
-                                            qos: .background)
+
         if let image = cache[url] {
             return Just(image).eraseToAnyPublisher()
         }
